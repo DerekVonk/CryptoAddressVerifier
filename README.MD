@@ -18,6 +18,26 @@ The script consists of a `main()` function that performs the address validation,
 - `is_valid_address(address, network)`: Validates the format of the given address based on the specified network.
 - `is_used_address(address, network)`: Checks if the address has been used on the blockchain.
 
+## Prerequisites
+
+Before using this script to which interacts with Etherscan API, you need to obtain a valid API key from Etherscan.io.  
+Follow these steps to get your API key:
+
+1. Create an account on Etherscan.io if you don't have one already.
+
+2. Log in to your Etherscan account.
+
+3. Go to the [Etherscan API-Keys page](https://etherscan.io/myapikey).
+
+4. Click on "Add New Key".
+
+5. Provide a name for your API key and specify the website you'll be using it on (you can use a placeholder URL).
+
+6. Accept the terms and conditions.
+
+7. Once your API key is generated, add it to this projects <root>/.env file
+
+
 ## Usage
 
 1. Run the script using the command line:
