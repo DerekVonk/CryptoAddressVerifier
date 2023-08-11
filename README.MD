@@ -63,8 +63,8 @@ This script is provided for educational and informational purposes only. Always 
 
 I borrowed / modified code from these projects:
 
-Base58 decoding: https://github.com/keis/base58
-Bech32 Validation: http://bit.ly/2Eaw40N
+- Base58 decoding: https://github.com/keis/base58  
+- Bech32 Validation: http://bit.ly/2Eaw40N
 
 Please test thoroughly before using this in a production environment. 
 There are no warranties, guarantees, or strings attached when using this software
