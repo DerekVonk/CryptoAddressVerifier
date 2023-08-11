@@ -4,6 +4,11 @@
 
 This script checks the validity of crypto addresses, verifies if they've been used on the blockchain, and matches two addresses against each other (if provided).
 
+when checking accounts on the blockchain this script leverages the APIs of:
+- https://etherscan.io
+- https://explorer.btc.com/
+
+
 ## Supported Crypto Address Formats
 
 Currently, this script supports the following crypto address formats:
