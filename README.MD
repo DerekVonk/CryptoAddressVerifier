@@ -20,7 +20,7 @@ The script consists of a `main()` function that performs the address validation,
 
 ## Prerequisites
 
-Before using this script to which interacts with Etherscan API, you need to obtain a valid API key from Etherscan.io.  
+Before using this script, you need to obtain a valid API key from Etherscan.io.  
 Follow these steps to get your API key:
 
 1. Create an account on Etherscan.io if you don't have one already.
