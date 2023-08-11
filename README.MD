@@ -9,7 +9,6 @@ This script checks the validity of crypto addresses, verifies if they've been us
 Currently, this script supports the following crypto address formats:
 - Ethereum (ETH)
 - Bitcoin (BTC)
-- Cardano (ADA)
 
 ## Structure
 
@@ -71,7 +70,7 @@ There are no warranties, guarantees, or strings attached when using this softwar
 
 ## Future Work
 
-- Expand the list of supported crypto address formats.
+- Expand the list of supported crypto address formats. (Cardano addresses coming soon)
 - Enhance error handling and informative messages for users.
 - Provide additional features, such as checking transaction history and balances.
 - Offer more advanced validation checks for addresses.

@@ -33,26 +33,27 @@ def is_valid_bitcoin_address(address):
 
 def is_valid_cardano_address(address):
     """Returns True if the address is a valid Cardano address, False otherwise."""
+    raise NotImplementedError("Not yet implemented")
 
-    if len(address) != 36:
-        return False
-
-    prefix = address[0:2]
-    if prefix != "addr":
-        return False
-
-    address_without_prefix = address[2:]
-
-    checksum = address[-8:]
-    address_without_checksum = address[:-8]
-
-    sha256_hash = hashlib.sha256(address_without_checksum.encode())
-    double_sha256_hash = hashlib.sha256(sha256_hash.digest()).hexdigest()[:8]
-
-    if checksum != double_sha256_hash:
-        return False
-
-    return True
+    # if len(address) != 36:
+    #     return False
+    #
+    # prefix = address[0:2]
+    # if prefix != "addr":
+    #     return False
+    #
+    # address_without_prefix = address[2:]
+    #
+    # checksum = address[-8:]
+    # address_without_checksum = address[:-8]
+    #
+    # sha256_hash = hashlib.sha256(address_without_checksum.encode())
+    # double_sha256_hash = hashlib.sha256(sha256_hash.digest()).hexdigest()[:8]
+    #
+    # if checksum != double_sha256_hash:
+    #     return False
+    #
+    # return True
 
 
 def is_same_address(address_a, address_b):
