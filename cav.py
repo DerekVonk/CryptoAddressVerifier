@@ -76,14 +76,18 @@ def get_network_from_address(address):
     Returns:
       The network that the address runs on, or None if the address is invalid.
     """
-    if is_valid_ethereum_address(address):
-        return "ETH"
-    elif is_valid_bitcoin_address(address):
-        return "BTC"
-    elif is_valid_cardano_address(address):
-        return "ADA"
-    else:
-        return None
+    try:
+        if is_valid_ethereum_address(address):
+            return "ETH"
+        elif is_valid_bitcoin_address(address):
+            return "BTC"
+        elif is_valid_cardano_address(address):
+            return "ADA"
+        else:
+            return None
+    except NotImplementedError:
+        print("Validating this address is not yet implemented...")
+        raise
 
 
 def is_non_zero_ethereum_address(address):
@@ -155,7 +159,6 @@ def is_used_address(address, network):
         print("Invalid network specified.")
         return False
 
-
 def main():
     """The main function."""
 
@@ -172,9 +175,12 @@ def main():
     address_b = args.address_b
 
     # get the network associated with the address and validate address
-    network = get_network_from_address(address_a)
-    if not network:
-        print("address is Invalid '{}'.".format(address_a))
+    try:
+        network = get_network_from_address(address_a)
+        if not network:
+            print("address is Invalid '{}'.".format(address_a))
+            return
+    except NotImplementedError:
         return
 
     # We're checking both addresses for a match
