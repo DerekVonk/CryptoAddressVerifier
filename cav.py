@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+
 import argparse
 import hashlib
 import json
-import requests
-from eip55 import test
+from requests import get
+from eip55 import validate
 from web3 import Web3
 from decouple import config
 import base58
@@ -13,9 +15,8 @@ ETHER_SCAN_API_KEY = config('ETHER_SCAN_API_KEY')
 
 def is_valid_ethereum_address(address):
     """Returns True if the address is a valid Ethereum address, False otherwise."""
-    if test(address) is None:
-        return True
-    return False
+
+    return validate(address)
 
 
 def is_valid_bitcoin_address(address):
@@ -62,18 +63,27 @@ def is_same_address(address_a, address_b):
     return address_a.lower() == address_b.lower()
 
 
-def is_valid_address(address, network):
+def is_valid_address(address):
     """Returns True if the address is valid for the specified network, False otherwise."""
 
-    if network == "ETH":
-        return is_valid_ethereum_address(address)
-    elif network == "BTC":
-        return is_valid_bitcoin_address(address)
-    elif network == "ADA":
-        return is_valid_cardano_address(address)
+
+def get_network_from_address(address):
+    """Returns the network that the address runs on.
+
+    Args:
+      address: The cryptocurrency address.
+
+    Returns:
+      The network that the address runs on, or None if the address is invalid.
+    """
+    if is_valid_ethereum_address(address):
+        return "ETH"
+    elif is_valid_bitcoin_address(address):
+        return "BTC"
+    elif is_valid_cardano_address(address):
+        return "ADA"
     else:
-        print("Invalid network specified.")
-        return False
+        return None
 
 
 def is_non_zero_ethereum_address(address):
@@ -85,7 +95,7 @@ def is_non_zero_ethereum_address(address):
            "&tag=latest"
            "&address={}"
            "&apikey={}").format(address, ETHER_SCAN_API_KEY)
-    response = requests.get(url)
+    response = get(url)
     response.raise_for_status()
 
     data = json.loads(response.content)
@@ -102,7 +112,7 @@ def is_used_bitcoin_address(address):
     """Returns True if the address has been used before, False otherwise."""
 
     url = "https://chain.api.btc.com/v3/address/{}".format(address)
-    response = requests.get(url)
+    response = get(url)
     response.raise_for_status()
 
     data = json.loads(response.content)
@@ -117,16 +127,19 @@ def is_used_bitcoin_address(address):
 def is_used_cardano_address(address):
     """Returns True if the address has been used before, False otherwise."""
 
-    url = "https://cardanoscan.io/address/{}".format(address)
-    response = requests.get(url)
+    raise NotImplementedError("Not yet implemented")
 
-    if response.status_code == 200:
-        data = json.loads(response.content)
-
-        if "totalReceived" in data:
-            return True
-
-    return False
+    #
+    # url = "https://cardanoscan.io/address/{}".format(address)
+    # response = get(url)
+    #
+    # if response.status_code == 200:
+    #     data = json.loads(response.content)
+    #
+    #     if "totalReceived" in data:
+    #         return True
+    #
+    # return False
 
 
 def is_used_address(address, network):
@@ -152,15 +165,19 @@ def main():
 
     parser.add_argument("address_a", help="The address(es) to verify")
     parser.add_argument('-ab', '--address_b', help="The second address to match against the first", required=False)
-    parser.add_argument('-n', '--network', help="The network the addresses are on. (ETH, BTC, ADA)")
 
     args = parser.parse_args()
 
     address_a = args.address_a
     address_b = args.address_b
-    network = args.network
 
-    # We're checking both addresses for a match, validity and if address_b has value
+    # get the network associated with the address and validate address
+    network = get_network_from_address(address_a)
+    if not network:
+        print("address is Invalid '{}'.".format(address_a))
+        return
+
+    # We're checking both addresses for a match
     if address_b:
         if is_same_address(address_a, address_b):
             print("The addresses MATCH.")
@@ -168,27 +185,10 @@ def main():
             print("The addresses DO NOT MATCH!")
             return
 
-        if not is_valid_address(address_a, network):
-            print("address is Invalid '{}'.".format(address_a))
-            return
-
-        amount = is_used_address(address_b, network)
-        if amount:
-            print("Address has non-zero amount of {} {}".format(amount, network))
-
-    # We're checking if the address is valid
-    else:
-        if is_valid_address(address_a, network):
-            print("address is valid '{}'.".format(address_a))
-
-            amount = is_used_address(address_a, network)
-            if amount:
-                print("Address has non-zero amount of {} {}".format(amount, network))
-
-            return
-        else:
-            print("address is INVALID '{}'.".format(address_a))
-            return
+    amount = is_used_address(address_a, network)
+    if amount:
+        print("Address has non-zero amount of {} {}".format(amount, network))
+        return
 
 
 if __name__ == "__main__":

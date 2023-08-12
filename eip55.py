@@ -1,3 +1,5 @@
+import binascii
+
 import eth_utils
 
 
@@ -29,8 +31,12 @@ def checksum_encode(addr): # Takes a 20-byte binary address as input
     return "0x" + checksummed_buffer
 
 
-def test(addr_str):
-    addr_bytes = eth_utils.to_bytes(hexstr=addr_str)
-    checksum_encoded = checksum_encode(addr_bytes)
-    assert checksum_encoded == addr_str, f"{checksum_encoded} != expected {addr_str}"
+def validate(addr_str):
+    try:
+        addr_bytes = eth_utils.to_bytes(hexstr=addr_str)
+        checksum_encoded = checksum_encode(addr_bytes)
+    except (binascii.Error, eth_utils.ValidationError) as error:
+        return False
+
+    return checksum_encoded == addr_str and f"{checksum_encoded} != expected {addr_str}"
 
